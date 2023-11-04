@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <mutex>
 
@@ -11,10 +12,9 @@ public:
     Chief(Cook* cook);
     void composeMeal(const std::vector<int>& ingredients);
     void exitRestaurant(int customerId);
+    void run();
 
 private:
 
     Cook* cook;
-    std::mutex mtx;
 };
-

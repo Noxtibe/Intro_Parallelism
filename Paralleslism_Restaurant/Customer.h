@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 
 class Waiter;
+class Cook;
 class Chief;
 
 class Customer 
@@ -9,11 +9,13 @@ class Customer
 public:
 
     Customer(int id, Waiter* waiter, Chief* chief);
-    void run();
+    void dine();
 
 private:
 
     int id;
     Waiter* waiter;
+    Cook* cook;
     Chief* chief;
+
 };

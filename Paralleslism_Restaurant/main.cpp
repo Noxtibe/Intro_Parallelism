@@ -2,34 +2,27 @@
 #include "Waiter.h"
 #include "Cook.h"
 #include "Chief.h"
+#include <thread>
 #include <vector>
+#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <string>
 
 using namespace std;
 
 int main() 
 {
-    Chief chief(nullptr);
-    Cook cook(&chief);
-    Waiter waiter(&cook, &chief);
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    Waiter waiter(nullptr, nullptr);
+    Cook cook(&waiter, nullptr);
+    Chief chief(&cook);
+
+    Customer customer(1, &waiter, &chief);
+    customer.dine();
 
 
-    vector<Customer> customers;
-    for (int i = 1; i <= 5; ++i) 
-    {
-        customers.emplace_back(i, &waiter, &chief);
-    }
-
-    vector<thread> threads;
-    threads.emplace_back(&Cook::run, &cook);
-    threads.emplace_back(&Waiter::run, &waiter);
-    for (Customer& customer : customers) {
-        threads.emplace_back(&Customer::run, &customer);
-    }
-
-    for (thread& thread : threads) 
-    {
-        thread.join();
-    }
 
     return 0;
 }

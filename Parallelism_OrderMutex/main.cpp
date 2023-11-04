@@ -1,29 +1,50 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 
 using namespace std;
 
 mutex mtx;
 const int limit = 1000;
+condition_variable cv;
+bool thread1_done = false;
 
-void printEvenNumbers(int id, int step) 
+void printEvenNumbers(int id, int step)
 {
-    for (int i = 0; i <= limit; i += 2) 
+    for (int i = 0; i <= limit; i += 1)
     {
-        // std::lock_guard is used to lock and unlock the mutex automatically, 
-        // ensuring that the mutex is released even if an exception is thrown
+        if (id == 2)
+        {
+            unique_lock<mutex> ulock(mtx);
+            cv.wait(ulock, [] { return thread1_done; });
+        }
+
         lock_guard<mutex> lock(mtx);
         cout << "Thread " << id << " : " << i << endl;
     }
+
+    // Indiquer que le thread 1 a terminé
+    if (id == 1)
+    {
+        unique_lock<mutex> ulock(mtx);
+        thread1_done = true;
+        ulock.unlock();
+        cv.notify_all();
+    }
 }
 
-int main() 
+int main()
 {
     thread thread1(printEvenNumbers, 1, 2);
+
+    // Attendre que le thread 1 termine
+    thread1.join();
+
+    // Maintenant, lancer le thread 2
     thread thread2(printEvenNumbers, 2, 2);
 
-    thread1.join();
+    // Attendre que le thread 2 se termine
     thread2.join();
 
     return 0;

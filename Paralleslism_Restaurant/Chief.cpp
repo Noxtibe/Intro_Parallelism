@@ -4,26 +4,27 @@
 #include <thread>
 #include <chrono>
 
-using namespace std;
-
 Chief::Chief(Cook* cook) : cook(cook) 
 {
-
 }
 
-void Chief::composeMeal(const vector<int>& ingredients) 
+void Chief::composeMeal(const std::vector<int>& ingredients) 
 {
-    cout << "Chief composes a meal from ingredients: ";
+    std::cout << "Chief composes a meal from ingredients : ";
     for (int ingredient : ingredients) 
     {
-        cout << ingredient << " ";
+        std::cout << ingredient << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 void Chief::exitRestaurant(int customerId) 
 {
-    this_thread::sleep_for(chrono::seconds(2)); // Simulate customer's time in the restaurant
-    cout << "Customer " << customerId << " exits the restaurant." << endl;
+    // Simulate customer's time in the restaurant
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Customer " << customerId << " exits the restaurant." << std::endl;
 }
 
+void Chief::run() 
+{
+}

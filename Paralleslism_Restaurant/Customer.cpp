@@ -1,37 +1,45 @@
 #include "Customer.h"
 #include "Waiter.h"
 #include "Chief.h"
+#include "Cook.h"
 #include <iostream>
 #include <thread>
-#include <vector>
 #include <chrono>
+#include <vector>
 
-using namespace std;
-
-Customer::Customer(int id, Waiter* waiter, Chief* chief) : id(id), waiter(waiter), chief(chief) 
+Customer::Customer(int id, Waiter* waiter, Chief* chief) : id(id), waiter(waiter), chief(chief)
 {
-
 }
 
-void Customer::run() 
+void Customer::dine() 
 {
-    vector<int> ingredients;
-    for (int i = 1; i <= 3; ++i) 
+    std::vector<int> ingredients;
+
+    // Simulate ordering a meal with 3 random ingredients out of 10
+    for (int i = 0; i < 3; ++i) 
     {
-        ingredients.push_back(rand() % 10 + 1); // Randomly select 3 ingredients from 10
+        ingredients.push_back(std::rand() % 10 + 1);
     }
 
-    cout << "Customer " << id << " orders a meal with ingredients: ";
+    std::cout << "Customer " << id << " orders a meal with ingredients: ";
     for (int ingredient : ingredients) 
     {
-        cout << ingredient << " ";
+        std::cout << ingredient << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
     waiter->placeOrder(id, ingredients);
 
-    this_thread::sleep_for(chrono::seconds(2)); // Simulate eating
-    cout << "Customer " << id << " has eaten the meal." << endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    cook->prepareIngredients(ingredients);
+
+    chief->composeMeal(ingredients);
+
+    waiter->serveMeal(id, ingredients);
+
+    // Simulate eating
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Customer " << id << " has eaten the meal." << std::endl;
 
     chief->exitRestaurant(id);
 }
